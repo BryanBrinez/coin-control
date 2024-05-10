@@ -5,11 +5,28 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import handleNavigation from "../utils/handleNavigation";
+import { createUser } from "../utils/firebase/user";
 
 export default function SignIn({ navigation }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [balance, setBalance] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const handleCreateUser = async (email, password) => {
+    try {
+      await createUser(name, email, password, balance);
+      alert("Usuario creado");
+    } catch (error) {
+      alert("Error al crear usuario: " + error.message);
+    }
+  };
+
   return (
     <View style={styles.conteiner}>
       <Image
@@ -19,32 +36,54 @@ export default function SignIn({ navigation }) {
 
       <View style={styles.card}>
         <View style={styles.boxText}>
-          <TextInput placeholder="Nombre" style={{ paddingHorizontal: 15 }} />
+          <TextInput
+            placeholder="Nombre"
+            style={{ paddingHorizontal: 15 }}
+            onChangeText={(text) => setName(text)}
+          />
         </View>
 
         <View style={styles.boxText}>
           <TextInput
             placeholder="email@email.com"
             style={{ paddingHorizontal: 15 }}
+            onChangeText={(text) => setEmail(text)}
           />
         </View>
 
         <View style={styles.boxText}>
-          <TextInput placeholder="Password" style={{ paddingHorizontal: 15 }} />
+          <TextInput
+            placeholder="$1000"
+            style={{ paddingHorizontal: 15 }}
+            onChangeText={(text) => setBalance(text)}
+          />
+        </View>
+
+        <View style={styles.boxText}>
+          <TextInput
+            placeholder="Password"
+            style={{ paddingHorizontal: 15 }}
+            onChangeText={(text) => setPassword(text)}
+          />
         </View>
 
         <View style={styles.conteinerButton}>
-          <TouchableOpacity style={styles.boxButton}>
+          <TouchableOpacity
+            style={styles.boxButton}
+            onPress={() => handleCreateUser(email, password)}
+          >
             <Text style={styles.buttonText}>Registrar</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.line} />
 
-        <View style={styles.registerContainer}> 
+        <View style={styles.registerContainer}>
           <Text style={styles.registerText}>¿Ya tienes cuenta?</Text>
-          <TouchableOpacity onPress={() => handleNavigation(navigation, "Login")}>
-            <Text style={styles.registerLink}> Inicia sesión</Text> 
+          <TouchableOpacity
+            onPress={() => handleNavigation(navigation, "Login")}
+          >
+            <Text style={styles.registerLink}> Inicia sesión</Text>
           </TouchableOpacity>
         </View>
       </View>

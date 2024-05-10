@@ -6,12 +6,32 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import handleNavigation from "../utils/handleNavigation";
-
-
+import { login } from "../utils/firebase/user";
 
 export default function Login({ navigation }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+
+  const handleLogin = async (email, password) => {
+    try {
+      await login(email, password);
+      alert("Se inicio sesion");
+    } catch (error) {
+      // Mostrar alerta de error
+      alert("Error al iniciar sesion " + error.message);
+    }
+  };
+
   return (
     <View style={styles.conteiner}>
       <Image
@@ -24,29 +44,37 @@ export default function Login({ navigation }) {
           <TextInput
             placeholder="email@email.com"
             style={{ paddingHorizontal: 15 }}
+            onChangeText={(text) => setEmail(text)}
           />
         </View>
 
         <View style={styles.boxText}>
-          <TextInput placeholder="Password" style={{ paddingHorizontal: 15 }} />
+          <TextInput
+            placeholder="Password"
+            style={{ paddingHorizontal: 15 }}
+            onChangeText={(text) => setPassword(text)}
+          />
         </View>
 
         <View style={styles.conteinerButton}>
-          <TouchableOpacity style={styles.boxButton}>
+          <TouchableOpacity
+            style={styles.boxButton}
+            onPress={() => handleLogin(email, password)}
+          >
             <Text style={styles.buttonText}>Iniciar sesión</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.line} />
 
-        <View style={styles.registerContainer}> 
+        <View style={styles.registerContainer}>
           <Text style={styles.registerText}>¿No tienes una cuenta?</Text>
-          <TouchableOpacity onPress={() => handleNavigation(navigation, "SignIn")}>
-            <Text style={styles.registerLink}> Regístrate</Text> 
+          <TouchableOpacity
+            onPress={() => handleNavigation(navigation, "SignIn")}
+          >
+            <Text style={styles.registerLink}> Regístrate</Text>
           </TouchableOpacity>
         </View>
-
-
       </View>
     </View>
   );
