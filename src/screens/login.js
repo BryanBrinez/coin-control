@@ -5,57 +5,39 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator,
 } from "react-native";
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import handleNavigation from "../utils/handleNavigation";
-import { createUser } from "../utils/firebase/user";
+import { login } from "../utils/firebase/user";
 
-export default function SignIn({ navigation }) {
+export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [balance, setBalance] = useState(0);
-  const [loading, setLoading] = useState(false);
 
-  const handleCreateUser = async (email, password) => {
+
+  const handleLogin = async (email, password) => {
     try {
-      await createUser(name, email, password, balance);
-      alert("Usuario creado");
+      await login(email, password);
+      alert("Se inicio sesion");
     } catch (error) {
-      alert("Error al crear usuario: " + error.message);
+      // Mostrar alerta de error
+      alert("Error al iniciar sesion " + error.message);
     }
   };
 
   return (
     <View style={styles.conteiner}>
       <Image
-        source={require("../assets/loginimage.png")}
+        source={require("../../assets/loginimage.png")}
         style={styles.profile}
       />
 
       <View style={styles.card}>
         <View style={styles.boxText}>
           <TextInput
-            placeholder="Nombre"
-            style={{ paddingHorizontal: 15 }}
-            onChangeText={(text) => setName(text)}
-          />
-        </View>
-
-        <View style={styles.boxText}>
-          <TextInput
             placeholder="email@email.com"
             style={{ paddingHorizontal: 15 }}
             onChangeText={(text) => setEmail(text)}
-          />
-        </View>
-
-        <View style={styles.boxText}>
-          <TextInput
-            placeholder="$1000"
-            style={{ paddingHorizontal: 15 }}
-            onChangeText={(text) => setBalance(text)}
           />
         </View>
 
@@ -70,20 +52,20 @@ export default function SignIn({ navigation }) {
         <View style={styles.conteinerButton}>
           <TouchableOpacity
             style={styles.boxButton}
-            onPress={() => handleCreateUser(email, password)}
+            onPress={() => handleLogin(email, password)}
           >
-            <Text style={styles.buttonText}>Registrar</Text>
+            <Text style={styles.buttonText}>Iniciar sesión</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.line} />
 
         <View style={styles.registerContainer}>
-          <Text style={styles.registerText}>¿Ya tienes cuenta?</Text>
+          <Text style={styles.registerText}>¿No tienes una cuenta?</Text>
           <TouchableOpacity
-            onPress={() => handleNavigation(navigation, "Login")}
+            onPress={() => handleNavigation(navigation, "SignIn")}
           >
-            <Text style={styles.registerLink}> Inicia sesión</Text>
+            <Text style={styles.registerLink}> Regístrate</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -105,9 +87,9 @@ const styles = StyleSheet.create({
     borderColor: "white",
   },
   card: {
-    margin: 20,
+    margin: 15,
     backgroundColor: "white",
-    borderRadius: 15,
+    borderRadius: 20,
     width: "90%",
     padding: 20,
     shadowColor: "#000",
@@ -139,22 +121,23 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
   },
+
   line: {
     borderBottomColor: "#00000040",
     borderBottomWidth: 1,
-    marginVertical: 10, // Espacio vertical opcional entre la línea y otros elementos
+    marginVertical: 10, 
   },
 
   registerContainer: {
-    flexDirection: "row", // Para alinear horizontalmente el texto y el enlace
-    alignItems: "center", // Para centrar verticalmente el texto y el enlace
-    justifyContent: "center", // Para centrar horizontalmente el texto y el enlace
-    marginTop: 10, // Espacio entre la línea y el contenedor de "Regístrate"
+    flexDirection: "row", 
+    alignItems: "center", 
+    justifyContent: "center", 
+    marginTop: 10, 
   },
   registerText: {
-    marginRight: 5, // Espacio entre el texto "¿No tienes una cuenta?" y el enlace "Regístrate"
+    marginRight: 5, 
   },
   registerLink: {
-    color: "#525fe1", // Color del enlace
+    color: "#525fe1", 
   },
 });

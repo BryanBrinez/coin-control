@@ -31,10 +31,10 @@ function CustomTabBarButton({ children, onPress }) {
   return (
     <TouchableOpacity
       style={{
-        top: -20, // ajusta el botón para que sobresalga
+        top: -20, 
         justifyContent: "center",
         alignItems: "center",
-        ...styles.shadow, // añade sombra al botón
+        ...styles.shadow, 
       }}
       onPress={onPress}
     >
@@ -43,9 +43,9 @@ function CustomTabBarButton({ children, onPress }) {
           width: 60,
           height: 60,
           borderRadius: 30,
-          backgroundColor: "#525fe1", // color de fondo blanco
-          justifyContent: 'center', // centrar contenido verticalmente
-          alignItems: 'center', // centrar contenido horizontalmente
+          backgroundColor: "#525fe1", 
+          justifyContent: 'center', 
+          alignItems: 'center', 
         }}
       >
         {children}
@@ -59,6 +59,9 @@ function BottomTabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarLabelStyle: { // Adjust font size here
+          fontSize: 14, // You can change this value to your desired size
+        },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -79,13 +82,13 @@ function BottomTabNavigator() {
       <Tab.Screen
         name="Home"
         component={Home}
-        options={{ tabBarLabel: "Registros", headerShown: false }} // Opcional: etiqueta visible debajo del icono
+        options={{ tabBarLabel: "Registros", headerShown: false }} 
       />
       <Tab.Screen
         name="Summary"
         component={Summary}
         options={{ tabBarLabel: "Informes", headerShown: false }}
-        // Opcional: etiqueta visible debajo del icono
+        
       />
       <Tab.Screen
         name="AddReport"
@@ -106,13 +109,13 @@ function BottomTabNavigator() {
         name="Notifications"
         component={Notifications}
         options={{ tabBarLabel: "Notificaciones", headerShown: false }}
-        // Opcional: etiqueta visible debajo del icono
+        
       />
       <Tab.Screen
         name="Profile"
         component={Profile}
         options={{ tabBarLabel: "Perfil", headerShown: false }}
-        // Opcional: etiqueta visible debajo del icono
+       
       />
     </Tab.Navigator>
   );

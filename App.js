@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "./firebase-config";
-import MyStack from "./utils/MyStack";
+import MyStack from "./src/utils/MyStack";
 
 
 export default function App() {
@@ -15,8 +15,10 @@ export default function App() {
     });
   }, []);
   return (
-    <NavigationContainer>
-      <MyStack user={user}/>
-    </NavigationContainer>
+    
+      <NavigationContainer>
+        <MyStack user={user} />
+      </NavigationContainer>
+    
   );
 }

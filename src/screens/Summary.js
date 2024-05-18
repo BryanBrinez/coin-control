@@ -1,8 +1,9 @@
 import { Text, StyleSheet, View, Button,TouchableOpacity, } from "react-native";
 import handleNavigation from "../utils/handleNavigation";
-import { FIREBASE_AUTH } from "../firebase-config";
+import { FIREBASE_AUTH } from "../../firebase-config";
 
-export default function Home({ navigation }) {
+export default function Summary({ navigation }) {
+
   return (
     <View style={styles.container}>
       <Text>Home</Text>
@@ -22,7 +23,8 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    
   },
 });
