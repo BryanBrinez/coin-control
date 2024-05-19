@@ -2,10 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { icons } from '../utils/icons/icons';
 
-const Transaction = ({ category, amount, iconName, type }) => {
-  const Icon = icons[iconName];
+const Transaction = ({ transaction}) => {
+  const {category, balance, type} = transaction 
+  const Icon = icons[category];
 
-  const getAmountColor = (amount) => {
+  const getAmountColor = (balance) => {
     return type == "Bill" ? 'red' : 'green'; // Concise conditional expression
   };
 
@@ -15,7 +16,7 @@ const Transaction = ({ category, amount, iconName, type }) => {
         {Icon}
       </View>
       <Text style={styles.categoryText}>{category}</Text>
-      <Text style={[styles.amountText, { color: getAmountColor(amount) }]}>{amount}</Text>
+      <Text style={[styles.amountText, { color: getAmountColor(balance) }]}>{balance}</Text>
     </View>
   );
 };

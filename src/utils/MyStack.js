@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignIn from "../screens/SignIn";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import BottomTab from "./bottomTap";
+import TransactionInfo from "../screens/TransactionInfo";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,6 +19,16 @@ export default function MyStack({ user }) {
             name="Insisde"
             component={BottomTab}
             options={{ headerShown: false }}
+
+          />
+          <Stack.Screen
+            name="TransactionInfo"
+            component={TransactionInfo}
+            options={{
+              headerShown: true,
+              headerTitle: "EcoFin",
+            }}
+            
           />
           
         </>

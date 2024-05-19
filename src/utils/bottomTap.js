@@ -14,13 +14,15 @@ const Tab = createBottomTabNavigator();
 
 export default function BottomTab() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator >
       <Stack.Screen
         name="BottomTabNavigator"
         component={BottomTabNavigator}
         options={{
           headerShown: true,
           headerTitle: "EcoFin",
+          
+          
         }}
       />
     </Stack.Navigator>
@@ -61,7 +63,10 @@ function BottomTabNavigator() {
       screenOptions={({ route }) => ({
         tabBarLabelStyle: { // Adjust font size here
           fontSize: 14, // You can change this value to your desired size
+          
         },
+        tabBarHideOnKeyboard: true,
+        
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 

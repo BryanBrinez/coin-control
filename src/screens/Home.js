@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { getTransactions } from "../utils/firebase/transactions";
 import Transaction from "../components/TransactionCard";
+import handleNavigation from "../utils/handleNavigation";
 
 export default function Home({ navigation }) {
   const [income, setIncome] = useState(0);
@@ -31,15 +32,10 @@ export default function Home({ navigation }) {
   const renderItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => {
-        console.log("presiono la transaccion", item.id || index);
+        navigation.navigate("TransactionInfo", { transaction: item });
       }}
     >
-      <Transaction
-        category={item.category}
-        amount={item.balance}
-        iconName={item.category}
-        type ={item.type}
-      />
+      <Transaction transaction={item} />
     </TouchableOpacity>
   );
 

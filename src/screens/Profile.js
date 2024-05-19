@@ -5,25 +5,39 @@ import {
   View,
   Image,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { getUser } from "../utils/firebase/user";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const handleEditPress = () => {
-    // Handle what happens when "Edit" is pressed (navigation, etc.)
-    console.log("Edit button pressed"); // Example placeholder
-  };
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     const unsubscribe = getUser((userData) => {
       setUser(userData);
+      setName(userData?.name || "");
+      setPhoneNumber(userData?.phoneNumber || "");
+      setDescription(userData?.description || "");
     });
 
     return unsubscribe;
   }, []);
+
+  const handleEditPress = () => {
+    setIsEditing(true);
+  };
+
+  const handleSavePress = () => {
+    // Aquí puedes agregar la lógica para guardar los cambios, por ejemplo, actualizar el perfil del usuario en la base de datos.
+    console.log("Datos guardados:", { name, phoneNumber, description });
+    setIsEditing(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -32,11 +46,24 @@ export default function Profile() {
           source={{ uri: "https://i.imgur.com/t3n532j.jpg" }}
           style={styles.profileImage}
         />
-        <Text style={styles.nameText}>{user?.name}</Text>
-        <Text style={styles.infoText}>
-          {user?.description}
-        </Text>
-        {/* Access user.metadata.creationTime instead */}
+        {isEditing ? (
+          <TextInput
+          style={styles.inputEdit}
+            value={name}
+            onChangeText={setName}
+          />
+        ) : (
+          <Text style={styles.nameText}>{name}</Text>
+        )}
+        {isEditing ? (
+          <TextInput
+          style={styles.inputEdit}
+            value={description}
+            onChangeText={setDescription}
+          />
+        ) : (
+          <Text style={styles.infoText}>{description}</Text>
+        )}
         <Text style={styles.infoText}>
           Activo desde{" "}
           {user?.metadata?.creationTime
@@ -45,12 +72,12 @@ export default function Profile() {
         </Text>
       </View>
       <View style={styles.infoSection}>
-        <View style={styles.infoSectionTitle}>
+        <View style={styles.infoSectionHeader}>
           <Text style={{ ...styles.infoSectionTitle, opacity: 0.9 }}>
             Información personal
           </Text>
-          <TouchableOpacity onPress={handleEditPress}>
-            <FontAwesome name="edit" size={24} color="#525fe1" />
+          <TouchableOpacity onPress={isEditing ? handleSavePress : handleEditPress}>
+            <FontAwesome name={isEditing ? "save" : "edit"} size={24} color="#525fe1" />
           </TouchableOpacity>
         </View>
 
@@ -65,21 +92,24 @@ export default function Profile() {
         <View style={styles.infoRow}>
           <View style={styles.infoIcon}>
             <FontAwesome name="phone" size={24} color="#525fe1" />
-            <Text style={{ ...styles.infoDetails, opacity: 0.6 }}>
-              {" "}
-              Teléfono
-            </Text>
+            <Text style={{ ...styles.infoDetails, opacity: 0.6 }}>Teléfono</Text>
           </View>
-
-          <Text style={styles.infoDetails}>{user?.phoneNumber}</Text>
+          {isEditing ? (
+            <TextInput
+              style={styles.input}
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              keyboardType="phone-pad"
+            />
+          ) : (
+            <Text style={styles.infoDetails}>{phoneNumber}</Text>
+          )}
         </View>
 
         <View style={styles.infoRow}>
           <View style={styles.infoIcon}>
             <Ionicons name="location-outline" size={24} color="#525fe1" />
-            <Text style={{ ...styles.infoDetails, opacity: 0.6 }}>
-              Ubicación
-            </Text>
+            <Text style={{ ...styles.infoDetails, opacity: 0.6 }}>Ubicación</Text>
           </View>
           <Text style={styles.infoDetails}>Colombia</Text>
         </View>
@@ -114,30 +144,46 @@ const styles = StyleSheet.create({
     marginTop: 30,
     paddingHorizontal: 10,
   },
+  infoSectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   infoSectionTitle: {
     fontSize: 23,
     fontWeight: "bold",
-    flexDirection: "row", // Make the section row-based
-    justifyContent: "space-between",
   },
   infoRow: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 15,
-    flexDirection: "row", // Make the section row-based
     justifyContent: "space-between",
-
-    // Agregar padding horizontal
   },
-
   infoIcon: {
     flexDirection: "row",
     alignItems: "center",
-
-    // Agregar padding horizontal
   },
-
   infoDetails: {
+    marginLeft: 15,
+    fontSize: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginLeft: 15,
+    fontSize: 20,
+  },
+  inputEdit: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    
     marginLeft: 15,
     fontSize: 20,
   },
