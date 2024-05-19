@@ -1,35 +1,25 @@
+import React, { useState, useEffect } from "react";
 import {
   Text,
   StyleSheet,
   View,
   Image,
-  Button,
   TouchableOpacity,
 } from "react-native";
-import React, { Component, useState, useEffect } from "react";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { Entypo } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { onAuthStateChanged } from "firebase/auth";
-import { FIREBASE_AUTH } from "../../firebase-config";
+import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { getUser } from "../utils/firebase/user";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
+
   const handleEditPress = () => {
     // Handle what happens when "Edit" is pressed (navigation, etc.)
     console.log("Edit button pressed"); // Example placeholder
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
-      if (user) {
-        const combinedUser = await getUser();
-        setUser(combinedUser);
-      } else {
-        setUser(null);
-      }
+    const unsubscribe = getUser((userData) => {
+      setUser(userData);
     });
 
     return unsubscribe;
@@ -44,7 +34,7 @@ export default function Profile() {
         />
         <Text style={styles.nameText}>{user?.name}</Text>
         <Text style={styles.infoText}>
-          22 year old dev from the Country Side
+          {user?.description}
         </Text>
         {/* Access user.metadata.creationTime instead */}
         <Text style={styles.infoText}>
@@ -60,7 +50,7 @@ export default function Profile() {
             Información personal
           </Text>
           <TouchableOpacity onPress={handleEditPress}>
-            <FontAwesome6 name="edit" size={24} color="#525fe1" />
+            <FontAwesome name="edit" size={24} color="#525fe1" />
           </TouchableOpacity>
         </View>
 
@@ -81,7 +71,7 @@ export default function Profile() {
             </Text>
           </View>
 
-          <Text style={styles.infoDetails}>{user?.metadata.phoneNumber}</Text>
+          <Text style={styles.infoDetails}>{user?.phoneNumber}</Text>
         </View>
 
         <View style={styles.infoRow}>

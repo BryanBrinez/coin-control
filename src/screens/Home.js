@@ -1,18 +1,47 @@
-
-import Transaction from "../components/TransactionCard";
-
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { getTransactions } from "../utils/firebase/transactions";
+import Transaction from "../components/TransactionCard";
 
 export default function Home({ navigation }) {
   const [income, setIncome] = useState(0);
-  const [expenses, setExpenses] = useState(-200);
+  const [expenses, setExpenses] = useState(0);
+  const [transaction, setTransaction] = useState([]);
 
   useEffect(() => {
-    // Cargar datos desde el almacenamiento local o una API
-    setIncome(500);
-    setExpenses(-200);
+    const unsubscribe = getTransactions((transactions) => {
+      setTransaction(transactions);
+
+      // Calcular ingresos y gastos como números
+      const newIncome = transactions
+        .filter(item => item.type === 'Income')
+        .reduce((sum, item) => sum + parseFloat(item.balance), 0); // Convertir a número
+
+      const newExpenses = transactions
+        .filter(item => item.type === 'Bill')
+        .reduce((sum, item) => sum + parseFloat(item.balance), 0); // Convertir a número
+      
+      setIncome(newIncome);
+      setExpenses(newExpenses);
+    });
+
+    return () => unsubscribe();
   }, []);
+
+  const renderItem = ({ item, index }) => (
+    <TouchableOpacity
+      onPress={() => {
+        console.log("presiono la transaccion", item.id || index);
+      }}
+    >
+      <Transaction
+        category={item.category}
+        amount={item.balance}
+        iconName={item.category}
+        type ={item.type}
+      />
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -21,18 +50,19 @@ export default function Home({ navigation }) {
         <View style={styles.infoRow}>
           <View style={styles.infoItem}>
             <Text style={styles.infoLabel}>Gastos</Text>
-            <Text style={styles.infoValue}>-30</Text>
+            <Text style={styles.infoValue}>{expenses}</Text>
           </View>
           <View style={styles.infoItem}>
             <Text style={styles.infoLabel}>Ingresos</Text>
-            <Text style={styles.infoValue}>20</Text>
+            <Text style={styles.infoValue}>{income}</Text>
           </View>
         </View>
       </View>
-      <Transaction category="Aperitivos" amount="-10.00" iconName="Aperitivos" />
-      <Transaction category="Transporte" amount="-15.00" iconName="Transporte" />
-      <Transaction category="Compras" amount="-20.00" iconName="Compras" />
-
+      <FlatList
+        data={transaction}
+        keyExtractor={(item, index) => item.id || index.toString()}
+        renderItem={renderItem}
+      />
     </View>
   );
 }
@@ -40,33 +70,33 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
   },
   boxInfo: {
-    backgroundColor:"green",
+    backgroundColor: "green",
     justifyContent: "flex-start",
     alignItems: "center",
+    paddingVertical: 10,
   },
   infoRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginVertical: 10, // Add vertical margin for spacing
+    marginVertical: 10,
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold", // Make title bold
+    fontWeight: "bold",
   },
   infoItem: {
     alignItems: "center",
-    marginHorizontal: 40, // Add horizontal margin for separation
   },
   infoLabel: {
     fontSize: 16,
-    marginBottom: 5, // Add space between label and value
+    marginBottom: 5,
   },
   infoValue: {
     fontSize: 18,
-    fontWeight: "bold", // Make value bold
+    fontWeight: "bold",
   },
 });

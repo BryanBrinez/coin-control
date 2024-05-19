@@ -1,5 +1,5 @@
 import { FIREBASE_AUTH, FIREBASE_DB } from "../../../firebase-config";
-import { doc, updateDoc,getDoc  } from "firebase/firestore";
+import { doc, updateDoc,getDoc,onSnapshot   } from "firebase/firestore";
 
 export const addTransaction = async (newTransaction) => {
     const auth = FIREBASE_AUTH;
@@ -31,3 +31,29 @@ export const addTransaction = async (newTransaction) => {
     }
   };
   
+
+  export const getTransactions = (callback) => {
+    const auth = FIREBASE_AUTH;
+    const db = FIREBASE_DB;
+  
+    try {
+      const currentUser = auth.currentUser;
+  
+      if (currentUser) {
+        const userDocRef = doc(db, "users", currentUser.uid);
+  
+        return onSnapshot(userDocRef, (docSnapshot) => {
+          const userDocData = docSnapshot.data();
+          if (userDocData && Array.isArray(userDocData.transactions)) {
+            callback(userDocData.transactions);
+          } else {
+            callback([]);
+          }
+        });
+      } else {
+        throw new Error("No hay usuario autenticado");
+      }
+    } catch (error) {
+      throw error;
+    }
+  };

@@ -4,7 +4,7 @@ import {
 } from "firebase/auth";
 
 import { FIREBASE_AUTH, FIREBASE_DB } from "../../../firebase-config";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc,onSnapshot } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const createUser = async (name, email, password, balance) => {
@@ -47,32 +47,35 @@ export const login = async (email, password) => {
   }
 };
 
-export const getUser = async () => {
+export const getUser = (callback) => {
   const auth = getAuth();
-  return new Promise((resolve, reject) => {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const { uid } = user; // Extract the UID from the user object
+  const db = FIREBASE_DB;
 
-        try {
-          const userDoc = await getDoc(doc(FIREBASE_DB, "users", uid));
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            const combinedData = { ...user, ...userData }; // Merge user and doc data
-            resolve(combinedData);
-          } else {
-            console.warn("User document not found for UID:", uid);
-            resolve(user); // Resolve with basic auth data if doc not found
-          }
-        } catch (error) {
-          reject(error);
+  const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const { uid } = user; // Extract the UID from the user object
+
+      const userDocRef = doc(db, "users", uid);
+
+      const unsubscribeSnapshot = onSnapshot(userDocRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          const combinedData = { ...user, ...userData }; // Merge user and doc data
+          callback(combinedData);
+        } else {
+          console.warn("User document not found for UID:", uid);
+          callback(user); // Return basic auth data if doc not found
         }
-      } else {
-        resolve(null);
-      }
-    }, (error) => {
-      reject(error);
-    });
-  });
-};
+      });
 
+      return unsubscribeSnapshot;
+    } else {
+      callback(null);
+    }
+  }, (error) => {
+    console.error("Error in onAuthStateChanged:", error);
+    callback(null);
+  });
+
+  return unsubscribeAuth;
+};

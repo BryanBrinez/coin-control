@@ -1,10 +1,13 @@
-// Transaction.js
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { icons } from '../utils/icons/icons'
+import { icons } from '../utils/icons/icons';
 
-const Transaction = ({ category, amount, iconName }) => {
+const Transaction = ({ category, amount, iconName, type }) => {
   const Icon = icons[iconName];
+
+  const getAmountColor = (amount) => {
+    return type == "Bill" ? 'red' : 'green'; // Concise conditional expression
+  };
 
   return (
     <View style={styles.container}>
@@ -12,7 +15,7 @@ const Transaction = ({ category, amount, iconName }) => {
         {Icon}
       </View>
       <Text style={styles.categoryText}>{category}</Text>
-      <Text style={styles.amountText}>{amount}</Text>
+      <Text style={[styles.amountText, { color: getAmountColor(amount) }]}>{amount}</Text>
     </View>
   );
 };
@@ -46,7 +49,6 @@ const styles = StyleSheet.create({
   },
   amountText: {
     fontSize: 16,
-    color: 'red',
   },
 });
 
