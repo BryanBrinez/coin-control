@@ -8,9 +8,12 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
+import { editTransaction } from "../utils/firebase/transactions";
 
 export default function TransactionInfo({ route, navigation }) {
-  const { transaction } = route.params;
+  const { transaction, index } = route.params;
+
+  console.log("index: " + index)
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -20,10 +23,22 @@ export default function TransactionInfo({ route, navigation }) {
   const [date, setDate] = useState(transaction.date);
   const [description, setDescription] = useState(transaction.description);
 
-  const handleSave = () => {
-    // Aquí puedes agregar la lógica para guardar los cambios, por ejemplo, actualizar la transacción en la base de datos.
-    console.log("Datos guardados:", { type, balance, category, date, description });
-    navigation.goBack();
+  const handleSave = async () => {
+    const updatedTransaction = {
+      type,
+      balance,
+      category,
+      date,
+      description,
+    };
+
+    try {
+      await editTransaction(index, updatedTransaction);
+      navigation.goBack();
+    } catch (error) {
+      console.error("Error updating transaction:", error);
+      // Aquí podrías agregar una lógica para manejar el error
+    }
   };
 
   let lastTap = null;
