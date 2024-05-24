@@ -18,10 +18,10 @@ export default function Login({ navigation }) {
   const handleLogin = async (email, password) => {
     try {
       await login(email, password);
-      alert("Se inicio sesion");
+      alert("Se inicio sesión");
     } catch (error) {
       // Mostrar alerta de error
-      alert("Error al iniciar sesion " + error.message);
+      alert("Error al iniciar sesión " + error.message);
     }
   };
 
@@ -43,7 +43,7 @@ export default function Login({ navigation }) {
 
         <View style={styles.boxText}>
           <TextInput
-            placeholder="Password"
+            placeholder="Contraseña"
             style={{ paddingHorizontal: 15 }}
             onChangeText={(text) => setPassword(text)}
           />
