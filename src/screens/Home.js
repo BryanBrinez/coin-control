@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   boxInfo: {
-    backgroundColor: "green",
+    backgroundColor: "#B5E36F",
     justifyContent: "flex-start",
     alignItems: "center",
     paddingVertical: 10,
@@ -90,6 +90,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   infoItem: {
+    marginRight: 45,
+    marginLeft: 45,
     alignItems: "center",
   },
   infoLabel: {

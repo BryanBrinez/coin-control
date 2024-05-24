@@ -21,7 +21,10 @@ export default function BottomTab() {
         options={{
           headerShown: true,
           headerTitle: "EcoFin",
-          
+          headerTitleStyle:{
+            color: 'blue',
+            fontFamily: 'PoetsenOne-Regular',
+          },
           
         }}
       />
@@ -128,7 +131,7 @@ function BottomTabNavigator() {
 
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: "#7F5DF0",
+    shadowColor: "#B5E36F",
     shadowOffset: {
       width: 0,
       height: 10,
