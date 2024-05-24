@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { getUser } from "../utils/firebase/user";
+import { editUser, getUser } from "../utils/firebase/user";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -33,10 +33,15 @@ export default function Profile() {
     setIsEditing(true);
   };
 
-  const handleSavePress = () => {
-    // Aquí puedes agregar la lógica para guardar los cambios, por ejemplo, actualizar el perfil del usuario en la base de datos.
-    console.log("Datos guardados:", { name, phoneNumber, description });
-    setIsEditing(false);
+  const handleSavePress = async () => {
+    try {
+      await editUser(user.uid, name, description, phoneNumber);
+      setIsEditing(false);
+      console.log("Usuario actualizado exitosamente.");
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+      // Aquí puedes agregar una notificación o mensaje de error al usuario
+    }
   };
 
   return (

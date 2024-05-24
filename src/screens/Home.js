@@ -11,7 +11,8 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     const unsubscribe = getTransactions((transactions) => {
-      setTransaction(transactions);
+      const reversedTransactions = transactions.slice().reverse(); 
+      setTransaction(reversedTransactions);
 
       // Calcular ingresos y gastos como números
       const newIncome = transactions
@@ -29,15 +30,19 @@ export default function Home({ navigation }) {
     return () => unsubscribe();
   }, []);
 
-  const renderItem = ({ item, index }) => (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.navigate("TransactionInfo", { transaction: item });
-      }}
-    >
-      <Transaction transaction={item} />
-    </TouchableOpacity>
-  );
+  const renderItem = ({ item, index }) => {
+    const originalIndex = transaction.length - 1 - index; // Obtener el índice original en el array invertido
+
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("TransactionInfo", { transaction: item, index: originalIndex });
+        }}
+      >
+        <Transaction transaction={item} />
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
