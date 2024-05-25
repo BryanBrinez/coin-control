@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,6 +8,7 @@ import Home from "../screens/Home";
 import Profile from "../screens/Profile";
 import AddReport from "../screens/AddReport";
 import Notifications from "../screens/Notifications";
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -20,10 +21,14 @@ export default function BottomTab() {
         component={BottomTabNavigator}
         options={{
           headerShown: true,
-          headerTitle: "EcoFin",
-          headerTitleStyle:{
-            color: 'blue',
-            fontFamily: 'PoetsenOne-Regular',
+          headerTitle: () => (
+            <Image
+              style={{ width: 350, height: 80}}
+              source={require('../../assets/logo2ecofin.png')} 
+            />
+          ),
+          headerStyle: {
+            backgroundColor: "#525fe1", 
           },
           
         }}

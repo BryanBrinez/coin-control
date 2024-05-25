@@ -46,6 +46,7 @@ export default function Login({ navigation }) {
             placeholder="Contraseña"
             style={{ paddingHorizontal: 15 }}
             onChangeText={(text) => setPassword(text)}
+            secureTextEntry={true}
           />
         </View>
 
