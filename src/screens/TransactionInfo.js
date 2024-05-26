@@ -8,6 +8,7 @@ import {
   Pressable,
   ScrollView,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker"; // Importar DateTimePicker
 import { editTransaction } from "../utils/firebase/transactions";
@@ -28,6 +29,7 @@ export default function TransactionInfo({ route, navigation }) {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [selectedType, setSelectedType] = useState(transaction.type);
   const [showPicker, setShowPicker] = useState(false); // Estado para mostrar el DatePicker
+  const [loading, setLoading] = useState(false);
 
   const toggleDataPicker = () => {
     setShowPicker(!showPicker);
@@ -45,6 +47,7 @@ export default function TransactionInfo({ route, navigation }) {
   };
 
   const handleSave = async () => {
+    setLoading(true);
     const updatedTransaction = {
       type,
       balance,
@@ -59,6 +62,8 @@ export default function TransactionInfo({ route, navigation }) {
     } catch (error) {
       console.error("Error updating transaction:", error);
       // Aquí podrías agregar una lógica para manejar el error
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,7 +81,6 @@ export default function TransactionInfo({ route, navigation }) {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.card}>
         <Pressable onPress={handleDoubleTap}>
-          
           {isEditing ? (
             <View style={styles.buttonContainer}>
               <TouchableOpacity
@@ -171,8 +175,16 @@ export default function TransactionInfo({ route, navigation }) {
         </Pressable>
 
         {isEditing && (
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleSave}
+            disabled={loading}
+          >{loading ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
             <Text style={styles.saveButtonText}>Guardar</Text>
+          )}
+            
           </TouchableOpacity>
         )}
 

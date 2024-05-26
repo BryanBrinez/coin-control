@@ -8,12 +8,14 @@ import {
   Pressable,
   ScrollView,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { addTransaction } from "../utils/firebase/transactions";
 import { icons } from "../utils/icons/icons"; // Asegúrate de ajustar la ruta según tu estructura de archivos
+import handleNavigation from "../utils/handleNavigation";
 
-export default function AddReport() {
+export default function AddReport({ navigation }) {
   const [income, setIncome] = useState({
     balance: "",
     type: "",
@@ -25,6 +27,7 @@ export default function AddReport() {
   const [showPicker, setShowPicker] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [selectedType, setSelectedType] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const toggleDataPicker = () => {
     setShowPicker(!showPicker);
@@ -52,11 +55,15 @@ export default function AddReport() {
   };
 
   const handleCreateReport = async (incm) => {
+    setLoading(true);
     try {
       await addTransaction(incm);
       alert("Income Creado");
+      handleNavigation(navigation, "Home")
     } catch (error) {
       alert("Error al crear income: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -134,8 +141,13 @@ export default function AddReport() {
           <TouchableOpacity
             style={styles.boxButton}
             onPress={() => handleCreateReport(income)}
+            disabled={loading}
           >
-            <Text style={styles.buttonText}>Registrar</Text>
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Registrar</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
