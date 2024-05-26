@@ -7,13 +7,16 @@ import {
   TouchableOpacity,
   Pressable,
   ScrollView,
+  Modal,
 } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker"; // Importar DateTimePicker
 import { editTransaction } from "../utils/firebase/transactions";
+import { icons } from "../utils/icons/icons";
 
 export default function TransactionInfo({ route, navigation }) {
   const { transaction, index } = route.params;
 
-  console.log("index: " + index)
+  console.log("index: " + index);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -22,6 +25,24 @@ export default function TransactionInfo({ route, navigation }) {
   const [category, setCategory] = useState(transaction.category);
   const [date, setDate] = useState(transaction.date);
   const [description, setDescription] = useState(transaction.description);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [selectedType, setSelectedType] = useState(transaction.type);
+  const [showPicker, setShowPicker] = useState(false); // Estado para mostrar el DatePicker
+
+  const toggleDataPicker = () => {
+    setShowPicker(!showPicker);
+  };
+
+  const onChangeDataPicker = (event, selectedDate) => {
+    if (event.type === "set") {
+      toggleDataPicker(); // Ocultar el selector de fecha antes de actualizar el estado
+
+      const currentDate = selectedDate || date;
+      setDate(currentDate.toDateString()); // Convertir la fecha al formato deseado
+    } else {
+      toggleDataPicker(); // Ocultar el selector de fecha
+    }
+  };
 
   const handleSave = async () => {
     const updatedTransaction = {
@@ -44,26 +65,49 @@ export default function TransactionInfo({ route, navigation }) {
   let lastTap = null;
   const handleDoubleTap = () => {
     const now = Date.now();
-    if (lastTap && (now - lastTap) < 300) {
+    if (lastTap && now - lastTap < 300) {
       setIsEditing(true);
     } else {
       lastTap = now;
     }
   };
-
+  const categories = Object.keys(icons);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.card}>
         <Pressable onPress={handleDoubleTap}>
-          <Text style={styles.label}>Tipo:</Text>
+          
           {isEditing ? (
-            <TextInput
-              style={styles.input}
-              value={type}
-              onChangeText={setType}
-            />
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.typeButton,
+                  selectedType === "Income" && styles.selectedButton,
+                ]}
+                onPress={() => {
+                  setType("Income");
+                  setSelectedType("Income");
+                }}
+              >
+                <Text style={styles.buttonText}>Ingreso</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.typeButton,
+                  selectedType === "Bill" && styles.selectedButton,
+                ]}
+                onPress={() => {
+                  setType("Bill");
+                  setSelectedType("Bill");
+                }}
+              >
+                <Text style={styles.buttonText}>Gasto</Text>
+              </TouchableOpacity>
+            </View>
           ) : (
-            <Text style={styles.value}>{type}</Text>
+            <View style={styles.buttonContainer}>
+              <Text style={styles.typeButton}>{type}</Text>
+            </View>
           )}
         </Pressable>
 
@@ -84,11 +128,14 @@ export default function TransactionInfo({ route, navigation }) {
         <Pressable onPress={handleDoubleTap}>
           <Text style={styles.label}>Categoría:</Text>
           {isEditing ? (
-            <TextInput
+            <TouchableOpacity
               style={styles.input}
-              value={category}
-              onChangeText={setCategory}
-            />
+              onPress={() => setShowCategoryModal(true)}
+            >
+              <Text style={styles.inputText}>
+                {category ? category : "Seleccionar Categoría"}
+              </Text>
+            </TouchableOpacity>
           ) : (
             <Text style={styles.value}>{category}</Text>
           )}
@@ -97,11 +144,14 @@ export default function TransactionInfo({ route, navigation }) {
         <Pressable onPress={handleDoubleTap}>
           <Text style={styles.label}>Fecha:</Text>
           {isEditing ? (
-            <TextInput
-              style={styles.input}
-              value={date}
-              onChangeText={setDate}
-            />
+            <Pressable onPress={toggleDataPicker}>
+              <TextInput
+                placeholder="Fecha"
+                style={styles.input}
+                value={date}
+                editable={false}
+              />
+            </Pressable>
           ) : (
             <Text style={styles.value}>{date}</Text>
           )}
@@ -125,6 +175,48 @@ export default function TransactionInfo({ route, navigation }) {
             <Text style={styles.saveButtonText}>Guardar</Text>
           </TouchableOpacity>
         )}
+
+        {showPicker && (
+          <DateTimePicker
+            value={new Date()} // Valor inicial del selector de fecha
+            mode="date"
+            display="spinner"
+            onChange={onChangeDataPicker}
+            onDismiss={toggleDataPicker} // Ocultar el selector de fecha cuando se descarta
+          />
+        )}
+
+        <Modal
+          visible={showCategoryModal}
+          animationType="slide"
+          transparent={true}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <ScrollView contentContainerStyle={styles.categoryContainer}>
+                {categories.map((category, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.categoryButton}
+                    onPress={() => {
+                      setCategory(category);
+                      setShowCategoryModal(false);
+                    }}
+                  >
+                    {icons[category]}
+                    <Text style={styles.categoryLabel}>{category}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setShowCategoryModal(false)}
+              >
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </ScrollView>
   );
@@ -167,21 +259,82 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
     borderRadius: 15,
   },
   saveButton: {
-    backgroundColor: '#525fe1',
+    backgroundColor: "#525fe1",
     padding: 10,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 20,
   },
   saveButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 18,
+  },
+  categoryContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    padding: 20,
+  },
+  categoryButton: {
+    alignItems: "center",
+    padding: 10,
+    margin: 5,
+    width: 80,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  categoryLabel: {
+    textAlign: "center",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    borderRadius: 15,
+    width: "80%",
+    padding: 20,
+    alignItems: "center",
+  },
+  closeButton: {
+    backgroundColor: "#525fe1",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 10,
+  },
+  closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 10,
+  },
+  typeButton: {
+    backgroundColor: "#ccc",
+    borderRadius: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginHorizontal: 5,
+  },
+  selectedButton: {
+    backgroundColor: "#525fe1",
+  },
+  buttonText: {
+    textAlign: "center",
+    color: "white",
   },
 });
