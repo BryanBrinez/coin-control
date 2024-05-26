@@ -3,11 +3,13 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native
 import { getTransactions } from "../utils/firebase/transactions";
 import Transaction from "../components/TransactionCard";
 import handleNavigation from "../utils/handleNavigation";
+import TransactionCardSkeleton from "../components/skeletons/TransactionCard-skeleton";
 
 export default function Home({ navigation }) {
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
   const [transaction, setTransaction] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = getTransactions((transactions) => {
@@ -25,6 +27,9 @@ export default function Home({ navigation }) {
       
       setIncome(newIncome);
       setExpenses(newExpenses);
+
+      // Establecer loading a false cuando se han cargado los datos
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -39,7 +44,7 @@ export default function Home({ navigation }) {
           navigation.navigate("TransactionInfo", { transaction: item, index: originalIndex });
         }}
       >
-        <Transaction transaction={item} />
+        {loading ? <TransactionCardSkeleton loading={true}/> : <Transaction transaction={item} />}
       </TouchableOpacity>
     );
   };
@@ -59,11 +64,21 @@ export default function Home({ navigation }) {
           </View>
         </View>
       </View>
-      <FlatList
-        data={transaction}
-        keyExtractor={(item, index) => item.id || index.toString()}
-        renderItem={renderItem}
-      />
+      {loading ? (
+        // Mostrar skeletons mientras carga
+        <FlatList
+          data={[...Array(5)]} // Esto crea un array ficticio para mostrar 5 skeletons
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={() => <TransactionCardSkeleton loading={true} />}
+        />
+      ) : (
+        // Mostrar transacciones una vez cargado
+        <FlatList
+          data={transaction}
+          keyExtractor={(item, index) => item.id || index.toString()}
+          renderItem={renderItem}
+        />
+      )}
     </View>
   );
 }
