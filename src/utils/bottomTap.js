@@ -23,7 +23,7 @@ export default function BottomTab() {
           headerShown: true,
           headerTitle: () => (
             <Image
-              style={{ width: 350, height: 80}}
+              style={{ marginLeft: 95}}
               source={require('../../assets/logo2ecofin.png')} 
             />
           ),

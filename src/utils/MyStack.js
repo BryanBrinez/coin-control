@@ -28,7 +28,7 @@ export default function MyStack({ user }) {
               headerShown: true,
               headerTitle: () => (
                 <Image
-                  style={{ width: 200, height: 80, marginLeft: 35}}
+                  style={{ marginLeft: 35}}
                   source={require('../../assets/logo2ecofin.png')} 
                 />
               ),
@@ -48,7 +48,7 @@ export default function MyStack({ user }) {
             options={{ headerShown: true,
               headerTitle: () => (
                 <Image
-                  style={{ width: 200, height: 80}}
+                  style={{marginLeft: 35}}
                   source={require('../../assets/logo2ecofin.png')} 
                 />
               ),
@@ -63,7 +63,7 @@ export default function MyStack({ user }) {
             options={{ headerShown: true,
               headerTitle: () => (
                 <Image
-                  style={{ width: 300, height: 80}}
+                  style={{marginLeft: 35}}
                   source={require('../../assets/logo2ecofin.png')} 
                 />
               ),
