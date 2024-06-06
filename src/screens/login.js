@@ -34,7 +34,9 @@ export default function Login({ navigation }) {
       <Image
         source={require("../../assets/loginimage.png")}
         style={styles.profile}
+      
       />
+      <Text style={styles.registerText}>Inicio de sesión</Text>
 
       <View style={styles.card}>
         <View style={styles.boxText}>

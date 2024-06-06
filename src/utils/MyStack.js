@@ -48,7 +48,7 @@ export default function MyStack({ user }) {
             options={{ headerShown: true,
               headerTitle: () => (
                 <Image
-                  style={{marginLeft: 35}}
+                  style={{marginLeft: 95}}
                   source={require('../../assets/logo2ecofin.png')} 
                 />
               ),

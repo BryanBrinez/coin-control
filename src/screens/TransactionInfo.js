@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 
+
 export default function TransactionInfo({ route, navigation }) {
   const { transaction } = route.params;
 
@@ -25,6 +26,7 @@ export default function TransactionInfo({ route, navigation }) {
     console.log("Datos guardados:", { type, balance, category, date, description });
     navigation.goBack();
   };
+
 
   let lastTap = null;
   const handleDoubleTap = () => {
@@ -74,6 +76,7 @@ export default function TransactionInfo({ route, navigation }) {
               value={category}
               onChangeText={setCategory}
             />
+            
           ) : (
             <Text style={styles.value}>{category}</Text>
           )}

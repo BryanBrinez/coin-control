@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   boxInfo: {
-    backgroundColor: "#B5E36F",
+    backgroundColor: "#6FB8E3",
     justifyContent: "flex-start",
     alignItems: "center",
     paddingVertical: 10,
