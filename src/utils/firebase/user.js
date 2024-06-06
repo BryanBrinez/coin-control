@@ -4,8 +4,8 @@ import {
 } from "firebase/auth";
 
 import { FIREBASE_AUTH, FIREBASE_DB } from "../../../firebase-config";
-import { doc, setDoc, getDoc,onSnapshot,updateDoc } from "firebase/firestore";
-import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { doc, setDoc, getDoc,onSnapshot } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const createUser = async (name, email, password, balance) => {
   const auth = FIREBASE_AUTH;
@@ -78,35 +78,4 @@ export const getUser = (callback) => {
   });
 
   return unsubscribeAuth;
-};
-
-export const editUser = async (uid, name, description, phoneNumber) => {
-  const db = FIREBASE_DB;
-  const auth = FIREBASE_AUTH;
-
-  try {
-    // Actualizar el perfil de usuario en Firebase Authentication
-    const user = auth.currentUser;
-    await updateProfile(user, {
-      displayName: name,
-    });
-
-    // Actualizar datos adicionales del usuario en Firestore
-    const userRef = doc(db, "users", uid);
-
-    // Comprueba si el documento existe antes de actualizar
-    const userDoc = await getDoc(userRef);
-    if (userDoc.exists()) {
-      await updateDoc(userRef, {
-        name: name,
-        description: description,
-        phoneNumber: phoneNumber,
-      });
-    } else {
-      console.error("User document not found for UID:", uid);
-      throw new Error("User document not found");
-    }
-  } catch (error) {
-    throw error;
-  }
 };

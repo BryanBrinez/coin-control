@@ -19,11 +19,14 @@ export default function SignIn({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const handleCreateUser = async (email, password) => {
+    setLoading(true);
     try {
       await createUser(name, email, password, balance);
       alert("Usuario creado");
     } catch (error) {
       alert("Error al crear usuario: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,8 +74,13 @@ export default function SignIn({ navigation }) {
           <TouchableOpacity
             style={styles.boxButton}
             onPress={() => handleCreateUser(email, password)}
+            disabled={loading}
           >
-            <Text style={styles.buttonText}>Registrarse</Text>
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Registrarse</Text>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -142,19 +150,19 @@ const styles = StyleSheet.create({
   line: {
     borderBottomColor: "#00000040",
     borderBottomWidth: 1,
-    marginVertical: 10, 
+    marginVertical: 10,
   },
 
   registerContainer: {
-    flexDirection: "row", 
-    alignItems: "center", 
-    justifyContent: "center", 
-    marginTop: 10, 
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
   },
   registerText: {
-    marginRight: 5, 
+    marginRight: 5,
   },
   registerLink: {
-    color: "#525fe1", 
+    color: "#525fe1",
   },
 });

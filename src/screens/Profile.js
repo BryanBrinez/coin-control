@@ -34,15 +34,10 @@ export default function Profile() {
     setIsEditing(true);
   };
 
-  const handleSavePress = async () => {
-    try {
-      await editUser(user.uid, name, description, phoneNumber);
-      setIsEditing(false);
-      console.log("Usuario actualizado exitosamente.");
-    } catch (error) {
-      console.error("Error al actualizar el usuario:", error);
-      // Aquí puedes agregar una notificación o mensaje de error al usuario
-    }
+  const handleSavePress = () => {
+    // Aquí puedes agregar la lógica para guardar los cambios, por ejemplo, actualizar el perfil del usuario en la base de datos.
+    console.log("Datos guardados:", { name, phoneNumber, description });
+    setIsEditing(false);
   };
 
   return (

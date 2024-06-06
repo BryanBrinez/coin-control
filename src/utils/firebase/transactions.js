@@ -57,39 +57,3 @@ export const addTransaction = async (newTransaction) => {
       throw error;
     }
   };
-
-  export const editTransaction = async (transactionIndex, updatedTransactionData) => {
-    const auth = FIREBASE_AUTH;
-    const db = FIREBASE_DB;
-  
-    try {
-      const currentUser = auth.currentUser;
-  
-      if (currentUser) {
-        const userDocRef = doc(db, "users", currentUser.uid);
-  
-        const userDocSnapshot = await getDoc(userDocRef);
-        const userDocData = userDocSnapshot.data();
-  
-        if (userDocData && Array.isArray(userDocData.transactions)) {
-          if (transactionIndex >= 0 && transactionIndex < userDocData.transactions.length) {
-            const updatedTransactions = [...userDocData.transactions];
-            updatedTransactions[transactionIndex] = {
-              ...updatedTransactions[transactionIndex],
-              ...updatedTransactionData,
-            };
-  
-            await updateDoc(userDocRef, { transactions: updatedTransactions });
-          } else {
-            throw new Error("Índice de transacción no válido");
-          }
-        } else {
-          throw new Error("No hay transacciones para este usuario");
-        }
-      } else {
-        throw new Error("No hay usuario autenticado");
-      }
-    } catch (error) {
-      throw error;
-    }
-  };

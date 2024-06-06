@@ -5,6 +5,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import React, { Component, useState, useEffect } from "react";
 import handleNavigation from "../utils/handleNavigation";
@@ -13,15 +14,18 @@ import { login } from "../utils/firebase/user";
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
 
   const handleLogin = async (email, password) => {
+    setLoading(true);
     try {
       await login(email, password);
-      alert("Se inicio sesión");
+      alert("Se inició sesión");
     } catch (error) {
-      // Mostrar alerta de error
       alert("Error al iniciar sesión " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,8 +58,13 @@ export default function Login({ navigation }) {
           <TouchableOpacity
             style={styles.boxButton}
             onPress={() => handleLogin(email, password)}
+            disabled={loading}
           >
-            <Text style={styles.buttonText}>Iniciar sesión</Text>
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Iniciar sesión</Text>
+            )}
           </TouchableOpacity>
         </View>
 
