@@ -8,22 +8,34 @@ import TransactionCardSkeleton from "../components/skeletons/TransactionCard-ske
 export default function Home({ navigation }) {
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
-  const [transaction, setTransaction] = useState([]);
+  const [groupedTransactions, setGroupedTransactions] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = getTransactions((transactions) => {
-      setTransaction(transactions);
+      const reversedTransactions = transactions.slice().reverse();
 
-      // Calcular ingresos y gastos como números
-      const newIncome = transactions
+      // Agrupar transacciones por categoría
+      const grouped = reversedTransactions.reduce((acc, transaction) => {
+        const category = transaction.category || "Uncategorized";
+        if (!acc[category]) {
+          acc[category] = [];
+        }
+        acc[category].push(transaction);
+        return acc;
+      }, {});
+
+      setGroupedTransactions(grouped);
+
+      // Calcular ingresos y gastos usando reversedTransactions
+      const newIncome = reversedTransactions
         .filter(item => item.type === 'Income')
-        .reduce((sum, item) => sum + parseFloat(item.balance), 0); // Convertir a número
+        .reduce((sum, item) => sum + parseFloat(item.balance), 0);
 
-      const newExpenses = transactions
+      const newExpenses = reversedTransactions
         .filter(item => item.type === 'Bill')
-        .reduce((sum, item) => sum + parseFloat(item.balance), 0); // Convertir a número
-      
+        .reduce((sum, item) => sum + parseFloat(item.balance), 0);
+
       setIncome(newIncome);
       setExpenses(newExpenses);
 
@@ -34,17 +46,29 @@ export default function Home({ navigation }) {
     return () => unsubscribe();
   }, []);
 
-  const renderItem = ({ item, index }) => {
-    const originalIndex = transaction.length - 1 - index; // Obtener el índice original en el array invertido
-
+  const renderTransactionItem = ({ item, index }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("TransactionInfo", { transaction: item, index: originalIndex });
+          navigation.navigate("TransactionInfo", { transaction: item, index });
         }}
       >
         {loading ? <TransactionCardSkeleton loading={true}/> : <Transaction transaction={item} />}
       </TouchableOpacity>
+    );
+  };
+
+  const renderCategory = ({ item }) => {
+    const category = item;
+    return (
+      <View>
+        <Text style={styles.categoryTitle}>{category}</Text>
+        <FlatList
+          data={groupedTransactions[category]}
+          keyExtractor={(item, index) => item.id || index.toString()}
+          renderItem={renderTransactionItem}
+        />
+      </View>
     );
   };
 
@@ -55,11 +79,11 @@ export default function Home({ navigation }) {
         <View style={styles.infoRow}>
           <View style={styles.infoItem}>
             <Text style={styles.infoLabel}>Gastos</Text>
-            <Text style={styles.infoValue}>{expenses}</Text>
+            <Text style={styles.infoValue}>${expenses}</Text>
           </View>
           <View style={styles.infoItem}>
             <Text style={styles.infoLabel}>Ingresos</Text>
-            <Text style={styles.infoValue}>{income}</Text>
+            <Text style={styles.infoValue}>${income}</Text>
           </View>
         </View>
       </View>
@@ -73,9 +97,9 @@ export default function Home({ navigation }) {
       ) : (
         // Mostrar transacciones una vez cargado
         <FlatList
-          data={transaction}
-          keyExtractor={(item, index) => item.id || index.toString()}
-          renderItem={renderItem}
+          data={Object.keys(groupedTransactions)}
+          keyExtractor={(item, index) => item || index.toString()}
+          renderItem={renderCategory}
         />
       )}
     </View>
@@ -87,7 +111,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   boxInfo: {
-    backgroundColor: "green",
+    backgroundColor: "#B5E36F",
     justifyContent: "flex-start",
     alignItems: "center",
     paddingVertical: 10,
@@ -104,6 +128,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   infoItem: {
+    marginRight: 45,
+    marginLeft: 45,
     alignItems: "center",
   },
   infoLabel: {
@@ -113,5 +139,11 @@ const styles = StyleSheet.create({
   infoValue: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  categoryTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    backgroundColor: "#D3D3D3",
+    padding: 10,
   },
 });

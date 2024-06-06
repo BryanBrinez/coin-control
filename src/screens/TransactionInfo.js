@@ -62,7 +62,7 @@ export default function TransactionInfo({ route, navigation }) {
               keyboardType="numeric"
             />
           ) : (
-            <Text style={styles.value}>{balance}</Text>
+            <Text style={styles.value}>${balance}</Text>
           )}
         </Pressable>
 

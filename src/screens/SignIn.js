@@ -64,7 +64,7 @@ export default function SignIn({ navigation }) {
 
         <View style={styles.boxText}>
           <TextInput
-            placeholder="Password"
+            placeholder="Contraseña"
             style={{ paddingHorizontal: 15 }}
             onChangeText={(text) => setPassword(text)}
           />
@@ -79,7 +79,7 @@ export default function SignIn({ navigation }) {
             {loading ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <Text style={styles.buttonText}>Registrar</Text>
+              <Text style={styles.buttonText}>Registrarse</Text>
             )}
           </TouchableOpacity>
         </View>

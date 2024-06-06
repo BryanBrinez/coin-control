@@ -8,7 +8,8 @@ import {
   TextInput,
 } from "react-native";
 import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { getUser } from "../utils/firebase/user";
+import { editUser, getUser } from "../utils/firebase/user";
+import { FIREBASE_AUTH } from "../../firebase-config";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -113,6 +114,9 @@ export default function Profile() {
           </View>
           <Text style={styles.infoDetails}>Colombia</Text>
         </View>
+        <TouchableOpacity style={styles.logoutButton} onPress={() => FIREBASE_AUTH.signOut()}>
+          <Text style={styles.registerLink}> Cerrar sesión</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -186,5 +190,12 @@ const styles = StyleSheet.create({
     
     marginLeft: 15,
     fontSize: 20,
+  },
+  logoutButton: {
+    alignSelf: 'center',
+    marginTop: 50,
+    backgroundColor: "#525fe1",
+    padding: 10,
+    borderRadius: 5,
   },
 });

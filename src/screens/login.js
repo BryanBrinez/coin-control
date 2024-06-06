@@ -47,9 +47,10 @@ export default function Login({ navigation }) {
 
         <View style={styles.boxText}>
           <TextInput
-            placeholder="Password"
+            placeholder="Contraseña"
             style={{ paddingHorizontal: 15 }}
             onChangeText={(text) => setPassword(text)}
+            secureTextEntry={true}
           />
         </View>
 

@@ -16,7 +16,7 @@ const Transaction = ({ transaction }) => {
         {Icon}
       </View>
       <Text style={styles.categoryText}>{category}</Text>
-      <Text style={[styles.amountText, { color: getAmountColor(balance) }]}>{balance}</Text>
+      <Text style={[styles.amountText, { color: getAmountColor(balance) }]}>${balance}</Text>
     </View>
   );
 };
