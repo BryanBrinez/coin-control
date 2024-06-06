@@ -26,7 +26,15 @@ export default function MyStack({ user }) {
             component={TransactionInfo}
             options={{
               headerShown: true,
-              headerTitle: "EcoFin",
+              headerTitle: () => (
+                <Image
+                  style={{ width: 200, height: 80, marginLeft: 35}}
+                  source={require('../../assets/logo2ecofin.png')} 
+                />
+              ),
+              headerStyle: {
+                backgroundColor: "#525fe1", 
+              },
             }}
             
           />
@@ -40,7 +48,7 @@ export default function MyStack({ user }) {
             options={{ headerShown: true,
               headerTitle: () => (
                 <Image
-                  style={{ width: 350, height: 80}}
+                  style={{ width: 200, height: 80}}
                   source={require('../../assets/logo2ecofin.png')} 
                 />
               ),
