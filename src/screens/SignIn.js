@@ -36,6 +36,7 @@ export default function SignIn({ navigation }) {
         source={require("../../assets/loginimage.png")}
         style={styles.profile}
       />
+      <Text style={styles.registerText}>Registro</Text>
 
       <View style={styles.card}>
         <View style={styles.boxText}>

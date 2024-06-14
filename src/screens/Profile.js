@@ -78,13 +78,13 @@ export default function Profile() {
             Información personal
           </Text>
           <TouchableOpacity onPress={isEditing ? handleSavePress : handleEditPress}>
-            <FontAwesome name={isEditing ? "save" : "edit"} size={24} color="#525fe1" />
+            <FontAwesome name={isEditing ? "save" : "edit"} size={24} color="#6e92c4" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.infoRow}>
           <View style={styles.infoIcon}>
-            <Entypo name="email" size={24} color="#525fe1" />
+            <Entypo name="email" size={24} color="#6e92c4" />
             <Text style={{ ...styles.infoDetails, opacity: 0.6 }}>Email</Text>
           </View>
           <Text style={styles.infoDetails}>{user?.email}</Text>
@@ -92,7 +92,7 @@ export default function Profile() {
 
         <View style={styles.infoRow}>
           <View style={styles.infoIcon}>
-            <FontAwesome name="phone" size={24} color="#525fe1" />
+            <FontAwesome name="phone" size={24} color="#6e92c4" />
             <Text style={{ ...styles.infoDetails, opacity: 0.6 }}>Teléfono</Text>
           </View>
           {isEditing ? (
@@ -109,7 +109,7 @@ export default function Profile() {
 
         <View style={styles.infoRow}>
           <View style={styles.infoIcon}>
-            <Ionicons name="location-outline" size={24} color="#525fe1" />
+            <Ionicons name="location-outline" size={24} color="#6e92c4" />
             <Text style={{ ...styles.infoDetails, opacity: 0.6 }}>Ubicación</Text>
           </View>
           <Text style={styles.infoDetails}>Colombia</Text>
@@ -197,5 +197,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#525fe1",
     padding: 10,
     borderRadius: 5,
+  },
+  registerLink: {
+    fontWeight: "bold",
   },
 });
