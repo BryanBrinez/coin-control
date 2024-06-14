@@ -1,9 +1,10 @@
-import { Dimensions, Text } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
 
 function LineGraphic({ data, styles }) {
-  return (
+  return ( 
+  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
     <LineChart
       data={{
         labels: Object.keys(data),
@@ -16,22 +17,26 @@ function LineGraphic({ data, styles }) {
       width={Dimensions.get("window").width * 0.9} // from react-native
       height={220}
       yAxisLabel="$"
-      yAxisSuffix="k"
+      yAxisSuffix=""
       yAxisInterval={1} // optional, defaults to 1
       chartConfig={{
+        
         backgroundColor: "#e26a00",
-        backgroundGradientFrom: "#fb8c00",
-        backgroundGradientTo: "#ffa726",
-        decimalPlaces: 2, // optional, defaults to 2dp
+        backgroundGradientFrom: "#6e92c4",
+        backgroundGradientTo: "#a3bbda",
+        decimalPlaces: 0, // optional, defaults to 2dp
         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        propsForLabels: {
+          fontSize: 9, // Ajusta este valor para cambiar el tamaño de las etiquetas
+        },
         style: {
           borderRadius: 16
         },
         propsForDots: {
           r: "4",
           strokeWidth: "2",
-          stroke: "#ffa726"
+          stroke: "#426ba3"
         }
       }}
       bezier
@@ -40,6 +45,7 @@ function LineGraphic({ data, styles }) {
         borderRadius: 16
       }}
     />
+  </View>
   )
 }
 

@@ -55,21 +55,21 @@ export default function Summary() {
   return (
     <ScrollView>
 
-      <Text>Distribucion por Categoria</Text> 
+      <Text style={styles.summaryTittle}>Distribución por Categoria</Text> 
 
       <View>
-        <Text>Fecha</Text>
+        <Text style={styles.summaryInfoF}>Fecha</Text>
         <SelectDate initDate={initDate} setInitDate={setInitDate} styles={styles} />
         <SelectDate initDate={endDate} setInitDate={setEndDate} styles={styles} />
       </View>
 
       {isLoading ? <Text>Loading...</Text> :
         <View>
-          <Text>Ingresos</Text>
+          <Text style={styles.summaryInfo}>Ingresos</Text>
           <LineGraphic data={data.groupIncomes} styles={styles} />
           <PieGraphic data={data.groupIncomes} />
 
-          <Text>GASTOS</Text>
+          <Text style={styles.summaryInfo}>Gastos</Text>
           <LineGraphic data={data.groupExpenses} styles={styles} />
           <PieGraphic data={data.groupIncomes} />
           
@@ -87,4 +87,33 @@ const styles = StyleSheet.create({
     justifyContent: "center",
 
   },
+  summaryTittle: {
+    fontSize: 30,
+    textAlign: 'center',
+    margin: 10,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+    backgroundColor: '#6e92c4',
+    padding: 10,
+    marginLeft: 50,
+    marginRight: 50,
+    borderRadius: 10,
+    
+  },
+  summaryInfoF: {
+    fontSize: 15,
+    margin: 10,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+  },
+  summaryInfo: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+    backgroundColor: '#6e92c4',
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+    borderRadius: 10,
+  },  
+ 
 });

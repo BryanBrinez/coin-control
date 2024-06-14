@@ -4,7 +4,7 @@ import { PieChart } from "react-native-chart-kit";
 
 
 const dataConfig = (groupExpenses) => {
-  const colorList = ["#F00", "#0F0", "#00F", "#FF0", "#F0F", "#0FF", "#FFF", "#000"];
+  const colorList = ["#ff4d4d", "#9aff9a", "#4d4dff", "#ffff4d", "#ff9aff", "#9affff", "#FFF", "#000"];
   const datos = []
   Object.keys(groupExpenses).map((key, index) => {
     datos.push({
