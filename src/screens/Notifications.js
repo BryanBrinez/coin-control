@@ -78,6 +78,17 @@ export default function Notifications({ navigation }) {
 
   return (
     <View style={styles.container}>
+      
+      <View>
+      <Text style={styles.notificationsTittle}>Pendientes</Text>
+
+     <View> 
+        <Text style={styles.infoTittle}>Por Cobrar</Text>
+        
+      </View>
+      
+    </View>
+
       <View style={styles.boxInfo}>
         <Text style={styles.title}>Administrador de dinero</Text>
         <View style={styles.infoRow}>
@@ -149,5 +160,24 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     backgroundColor: "#D3D3D3",
     padding: 10,
+  },
+  notificationsTittle: {
+    fontSize: 30,
+    textAlign: 'center',
+    margin: 10,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+    backgroundColor: '#6e92c4',
+    padding: 10,
+    marginLeft: 50,
+    marginRight: 50,
+    borderRadius: 10,
+    
+  },
+infoTittle: {
+  fontSize: 18,
+  fontWeight: "bold",
+  backgroundColor: "#D3D3D3",
+  padding: 10,
   },
 });
