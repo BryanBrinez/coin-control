@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   boxInfo: {
-    backgroundColor: "#6FB8E3",
+    backgroundColor: "#6e92c4",
     justifyContent: "flex-start",
     alignItems: "center",
     paddingVertical: 10,
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    fontFamily: "monospace",
   },
   infoItem: {
     marginRight: 45,
@@ -139,6 +140,7 @@ const styles = StyleSheet.create({
   infoValue: {
     fontSize: 18,
     fontWeight: "bold",
+    fontFamily: "monospace",
   },
   categoryTitle: {
     fontSize: 18,
