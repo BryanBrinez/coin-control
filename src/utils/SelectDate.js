@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Pressable,  TextInput  } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-export default function SelectDate({initDate, setInitDate, styles}) {
+export default function SelectDate({date, setDate, styles}) {
   const [showDate, setshowDate] = useState(false);
 
   const handleDateSelection= () =>  {
@@ -13,8 +13,8 @@ export default function SelectDate({initDate, setInitDate, styles}) {
     if (event.type === "set") {
       handleDateSelection(); // Ocultar el selector de fecha antes de actualizar el estado
       
-      const currentDate = selectedDate || initDate;
-      setInitDate(currentDate.toDateString());
+      const currentDate = selectedDate || date;
+      setDate(currentDate.toDateString());
     } else {
       handleDateSelection(); // Ocultar el selector de fecha
     }
@@ -24,8 +24,7 @@ export default function SelectDate({initDate, setInitDate, styles}) {
     <>
     <Pressable onPress={handleDateSelection}>
           <TextInput
-            style={[styles.input]}
-            value={initDate}
+            value={date}
             editable={false}
           />
     </Pressable>

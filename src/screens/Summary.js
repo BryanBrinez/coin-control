@@ -57,10 +57,11 @@ export default function Summary() {
 
       <Text style={styles.summaryTittle}>Distribución por Categoria</Text> 
 
-      <View>
-        <Text style={styles.summaryInfoF}>Fecha</Text>
-        <SelectDate initDate={initDate} setInitDate={setInitDate} styles={styles} />
-        <SelectDate initDate={endDate} setInitDate={setEndDate} styles={styles} />
+      <View style={styles.summaryInfoF}>
+        <Text>Fecha  </Text>
+        <SelectDate date={initDate} setDate={setInitDate}/>
+        <Text>  //  </Text>
+        <SelectDate date={endDate} setDate={setEndDate}/>
       </View>
 
       {isLoading ? <Text>Loading...</Text> :
@@ -71,7 +72,7 @@ export default function Summary() {
 
           <Text style={styles.summaryInfo}>Gastos</Text>
           <LineGraphic data={data.groupExpenses} styles={styles} />
-          <PieGraphic data={data.groupIncomes} />
+          <PieGraphic data={data.groupExpenses} />
           
 
         </View>}
@@ -102,6 +103,8 @@ const styles = StyleSheet.create({
   },
   summaryInfoF: {
     fontSize: 15,
+    flex : 1,
+    flexDirection: 'row',
     margin: 10,
     fontWeight: 'bold',
     fontFamily: 'monospace',

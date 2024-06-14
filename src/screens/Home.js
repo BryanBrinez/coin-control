@@ -16,7 +16,9 @@ export default function Home({ navigation }) {
       const reversedTransactions = transactions.slice().reverse();
 
       // Agrupar transacciones por categoría
-      const grouped = reversedTransactions.reduce((acc, transaction) => {
+      const grouped = reversedTransactions
+      .filter(item => (new Date(item.date) <= new Date()))
+      .reduce((acc, transaction) => {
         const category = transaction.category || "Uncategorized";
         if (!acc[category]) {
           acc[category] = [];
@@ -29,11 +31,11 @@ export default function Home({ navigation }) {
 
       // Calcular ingresos y gastos usando reversedTransactions
       const newIncome = reversedTransactions
-        .filter(item => item.type === 'Income')
+        .filter(item => (item.type === 'Income' && (new Date(item.date) <= new Date())))
         .reduce((sum, item) => sum + parseFloat(item.balance), 0);
 
       const newExpenses = reversedTransactions
-        .filter(item => item.type === 'Bill')
+        .filter(item => item.type === 'Bill' && (new Date(item.date) <= new Date()))
         .reduce((sum, item) => sum + parseFloat(item.balance), 0);
 
       setIncome(newIncome);

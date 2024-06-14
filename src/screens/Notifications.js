@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { getTransactions } from "../utils/firebase/transactions";
 import Transaction from "../components/TransactionCard";
-import handleNavigation from "../utils/handleNavigation";
 import TransactionCardSkeleton from "../components/skeletons/TransactionCard-skeleton";
 
-const isBefore = (date1, dateNow) => {}
+const isBefore = (date1, dateNow) => { 
+  console.log(date1< dateNow)
+  return true
+}
 
 export default function Notifications({ navigation }) {
   const [income, setIncome] = useState(0);
@@ -18,16 +20,16 @@ export default function Notifications({ navigation }) {
       const reversedTransactions = transactions.slice().reverse();
 
       // Agrupar transacciones por categoría
-      const grouped = reversedTransactions.
-      filter( item => isBefore(new Date(item.date), new Date()))
-      reduce((acc, transaction) => {
-        const type = transaction.type || "Untype";
-        if (!acc[type]) {
-          acc[type] = [];
-        }
-        acc[type].push(transaction);
-        return acc;
-      }, {});
+      const grouped = reversedTransactions
+        .filter(item => new Date(item.date) > new Date())
+        .reduce((acc, transaction) => {
+          const type = transaction.type || "Untype";
+          if (!acc[type]) {
+            acc[type] = [];
+          }
+          acc[type].push(transaction);
+          return acc;
+        }, {});
 
       setGroupedTransactions(grouped);
 
@@ -57,7 +59,7 @@ export default function Notifications({ navigation }) {
           navigation.navigate("TransactionInfo", { transaction: item, index });
         }}
       >
-        {loading ? <TransactionCardSkeleton loading={true}/> : <Transaction transaction={item} />}
+        {loading ? <TransactionCardSkeleton loading={true} /> : <Transaction transaction={item} />}
       </TouchableOpacity>
     );
   };
@@ -67,6 +69,7 @@ export default function Notifications({ navigation }) {
     return (
       <View>
         <Text style={styles.categoryTitle}>{category}</Text>
+        <Text>{income}</Text>
         <FlatList
           data={groupedTransactions[category]}
           keyExtractor={(item, index) => item.id || index.toString()}
@@ -78,45 +81,29 @@ export default function Notifications({ navigation }) {
 
   return (
     <View style={styles.container}>
-      
+
       <View>
-      <Text style={styles.notificationsTittle}>Pendientes</Text>
+        <Text style={styles.notificationsTittle}>Pendientes</Text>
 
-     <View> 
-        <Text style={styles.infoTittle}>Por Cobrar</Text>
-        
-      </View>
-      
-    </View>
+        <View>
+          {loading ? (
+            // Mostrar skeletons mientras carga
+            <FlatList
+              data={[...Array(5)]} // Esto crea un array ficticio para mostrar 5 skeletons
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={() => <TransactionCardSkeleton loading={true} />}
+            />
+          ) : (
+            // Mostrar transacciones una vez cargado
+            <FlatList
+              data={Object.keys(groupedTransactions)}
+              keyExtractor={(item, index) => item || index.toString()}
+              renderItem={renderCategory}
+            />
+          )}
 
-      <View style={styles.boxInfo}>
-        <Text style={styles.title}>Administrador de dinero</Text>
-        <View style={styles.infoRow}>
-          <View style={styles.infoItem}>
-            <Text style={styles.infoLabel}>Gastos</Text>
-            <Text style={styles.infoValue}>${expenses}</Text>
-          </View>
-          <View style={styles.infoItem}>
-            <Text style={styles.infoLabel}>Ingresos</Text>
-            <Text style={styles.infoValue}>${income}</Text>
-          </View>
         </View>
       </View>
-      {loading ? (
-        // Mostrar skeletons mientras carga
-        <FlatList
-          data={[...Array(5)]} // Esto crea un array ficticio para mostrar 5 skeletons
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={() => <TransactionCardSkeleton loading={true} />}
-        />
-      ) : (
-        // Mostrar transacciones una vez cargado
-        <FlatList
-          data={Object.keys(groupedTransactions)}
-          keyExtractor={(item, index) => item || index.toString()}
-          renderItem={renderCategory}
-        />
-      )}
     </View>
   );
 }
@@ -172,12 +159,12 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     marginRight: 50,
     borderRadius: 10,
-    
+
   },
-infoTittle: {
-  fontSize: 18,
-  fontWeight: "bold",
-  backgroundColor: "#D3D3D3",
-  padding: 10,
+  infoTittle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    backgroundColor: "#D3D3D3",
+    padding: 10,
   },
 });
