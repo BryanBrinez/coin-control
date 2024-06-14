@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   selectedButton: {
-    backgroundColor: "#525fe1",
+    backgroundColor: "#D2D9E3",
   },
   categoryContainer: {
     flexDirection: "row",

@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/logoecofin.png",
       "resizeMode": "contain",
-      "backgroundColor": "#525fe1"
+      "backgroundColor": "#D2D9E3"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -20,7 +20,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logoecofin.png",
-        "backgroundColor": "#525fe1"
+        "backgroundColor": "#D2D9E3"
       }
     },
     "web": {

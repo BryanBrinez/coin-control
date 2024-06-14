@@ -28,12 +28,12 @@ export default function MyStack({ user }) {
               headerShown: true,
               headerTitle: () => (
                 <Image
-                  style={{ marginLeft: 35}}
+                  style={{ width: 150, height: 50, resizeMode: 'contain' }}
                   source={require('../../assets/logo2ecofin.png')} 
                 />
               ),
               headerStyle: {
-                backgroundColor: "#525fe1", 
+                backgroundColor: "#D2D9E3", 
               },
             }}
             
@@ -48,12 +48,12 @@ export default function MyStack({ user }) {
             options={{ headerShown: true,
               headerTitle: () => (
                 <Image
-                  style={{marginLeft: 95}}
+                style={{ width: 150, height: 50, resizeMode: 'contain' }}
                   source={require('../../assets/logo2ecofin.png')} 
                 />
               ),
               headerStyle: {
-                backgroundColor: "#525fe1", 
+                backgroundColor: "#D2D9E3", 
               },
              }}
           />
@@ -63,12 +63,12 @@ export default function MyStack({ user }) {
             options={{ headerShown: true,
               headerTitle: () => (
                 <Image
-                  style={{marginLeft: 35}}
+                style={{ width: 150, height: 50, resizeMode: 'contain' }}
                   source={require('../../assets/logo2ecofin.png')} 
                 />
               ),
               headerStyle: {
-                backgroundColor: "#525fe1", 
+                backgroundColor: "#D2D9E3", 
               },
              }}
           />

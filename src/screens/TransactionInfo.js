@@ -8,6 +8,7 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
+import { icons } from "../utils/icons/icons";
 
 
 export default function TransactionInfo({ route, navigation }) {
@@ -40,6 +41,7 @@ export default function TransactionInfo({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {React.cloneElement(icons[category], { size: 100 })}
       <View style={styles.card}>
         <Pressable onPress={handleDoubleTap}>
           <Text style={styles.label}>Tipo:</Text>
