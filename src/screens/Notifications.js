@@ -10,9 +10,9 @@ const isBefore = (date1, dateNow) => {
 }
 
 export default function Notifications({ navigation }) {
-  const [income, setIncome] = useState(0);
-  const [expenses, setExpenses] = useState(0);
+  
   const [groupedTransactions, setGroupedTransactions] = useState({});
+  const [GroupedTotal, setGroupedTotal] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,29 +22,25 @@ export default function Notifications({ navigation }) {
       // Agrupar transacciones por categoría
       const grouped = reversedTransactions
         .filter(item => new Date(item.date) > new Date())
-        .reduce((acc, transaction) => {
+        .reduce((acumulate, transaction) => {
           const type = transaction.type || "Untype";
-          if (!acc[type]) {
-            acc[type] = [];
-          }
-          acc[type].push(transaction);
-          return acc;
+          if (!acumulate[type]) {acumulate[type] = []; }
+          acumulate[type].push(transaction);
+          return acumulate;
         }, {});
 
       setGroupedTransactions(grouped);
 
-      // Calcular ingresos y gastos usando reversedTransactions
-      const newIncome = reversedTransactions
-        .filter(item => item.type === 'Income')
-        .reduce((sum, item) => sum + parseFloat(item.balance), 0);
+      const groupedTotal = reversedTransactions
+        .filter(item => new Date(item.date) > new Date())
+        .reduce((acumulate, transaction) => {
+          const type = transaction.type || "Untype";
+          if (!acumulate[type]) {acumulate[type] = 0; }
+          acumulate[type] += parseFloat(transaction.balance);
+          return acumulate;
+        }, {});
 
-      const newExpenses = reversedTransactions
-        .filter(item => item.type === 'Bill')
-        .reduce((sum, item) => sum + parseFloat(item.balance), 0);
-
-      setIncome(newIncome);
-      setExpenses(newExpenses);
-
+        setGroupedTotal(groupedTotal);
       // Establecer loading a false cuando se han cargado los datos
       setLoading(false);
     });
@@ -68,8 +64,10 @@ export default function Notifications({ navigation }) {
     const category = item;
     return (
       <View>
-        <Text style={styles.categoryTitle}>{category}</Text>
-        <Text>{income}</Text>
+        <View style={styles.categoryBar}>
+          <Text style={styles.categoryTitle}>{category}</Text>
+          <Text style={styles.categoryTitle}>${GroupedTotal[category]}</Text>
+        </View>
         <FlatList
           data={groupedTransactions[category]}
           keyExtractor={(item, index) => item.id || index.toString()}
@@ -145,6 +143,13 @@ const styles = StyleSheet.create({
   categoryTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    backgroundColor: "#D3D3D3",
+    padding: 10,
+  },
+  categoryBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: "#D3D3D3",
     padding: 10,
   },

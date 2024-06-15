@@ -30,6 +30,43 @@ export const addTransaction = async (newTransaction) => {
       throw error;
     }
   };
+
+  
+export const editTransaction = async (transactionId, updatedTransaction) => {
+  const auth = FIREBASE_AUTH;
+  const db = FIREBASE_DB;
+
+  try {
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+      const userDocRef = doc(db, "users", currentUser.uid);
+
+      const userDocSnapshot = await getDoc(userDocRef);
+      const userDocData = userDocSnapshot.data();  
+
+      let updatedTransactions = [];
+
+      if (Array.isArray(userDocData.transactions)) {
+        updatedTransactions = userDocData.transactions.map(transaction => {
+          if (transaction.id === transactionId) {
+            return updatedTransaction;
+          } else {
+            return transaction;
+          }
+        });
+      } else {
+        throw new Error("No hay transacciones existentes");
+      }
+
+      await updateDoc(userDocRef, { transactions: updatedTransactions });
+    } else {
+      throw new Error("No hay usuario autenticado");
+    }
+  } catch (error) {
+    throw error;
+  }
+};
   
 
   export const getTransactions = (callback) => {

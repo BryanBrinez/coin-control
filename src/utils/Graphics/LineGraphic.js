@@ -16,6 +16,10 @@ function LineGraphic({ data, styles }) {
       }}
       width={Dimensions.get("window").width * 0.9} // from react-native
       height={220}
+      yLabelsOffset = {10}
+      xLabelsOffset = {5}
+      segments = {6}
+      fromZero={true}
       yAxisLabel="$"
       yAxisSuffix=""
       yAxisInterval={1} // optional, defaults to 1
@@ -28,7 +32,7 @@ function LineGraphic({ data, styles }) {
         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         propsForLabels: {
-          fontSize: 9, // Ajusta este valor para cambiar el tamaño de las etiquetas
+          fontSize: 13, // Ajusta este valor para cambiar el tamaño de las etiquetas
         },
         style: {
           borderRadius: 16

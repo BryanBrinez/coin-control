@@ -4,7 +4,7 @@ import { PieChart } from "react-native-chart-kit";
 
 
 const dataConfig = (groupExpenses) => {
-  const colorList = ["#ff4d4d", "#9aff9a", "#4d4dff", "#ffff4d", "#ff9aff", "#9affff", "#FFF", "#000"];
+  const colorList = ["#809bce","#fb6f92","#9affff", "#ffc09f", "#ffee93" ,"#daeaf6", "#f6dada"];
   const datos = []
   Object.keys(groupExpenses).map((key, index) => {
     datos.push({
@@ -12,7 +12,7 @@ const dataConfig = (groupExpenses) => {
       population: groupExpenses[key],
       color: colorList[index],
       legendFontColor: "#7F7F7F",
-      legendFontSize: 15
+      legendFontSize: 14
     })
   })
   return datos;
@@ -39,7 +39,7 @@ export default function PieGraphic({ data , styles }) {
           accessor={"population"}
           backgroundColor={"transparent"}
           paddingLeft={"15"}
-          center={[10, 10]}
+          center={[10, 0]}
           absolute
         />
   )

@@ -19,7 +19,7 @@ export default function Summary() {
     const unsubscribe = getTransactions((transactions) => {
       const reversedTransactions = transactions.slice().reverse();
 
-      const groupIncomes = reversedTransactions
+      const groupIncomesByCategory = reversedTransactions
         .filter(item => item.type === 'Income')
         .reduce((acumulate, transaction) => {
           const category = transaction.category || "Uncategorized";
@@ -28,12 +28,30 @@ export default function Summary() {
           return acumulate;
         }, {});
 
-      const groupExpenses = reversedTransactions
+      const groupExpensesByCategory = reversedTransactions
         .filter(item => item.type === 'Bill')
         .reduce((acumulate, transaction) => {
           const category = transaction.category || "Uncategorized";
           if (!acumulate[category]) acumulate[category] = 0;
           acumulate[category] += transaction.balance ? parseFloat(transaction.balance) : 0;
+          return acumulate;
+        }, {});
+
+        const groupIncomesByMonth = reversedTransactions
+        .filter(item => item.type === 'Income')
+        .reduce((acumulate, transaction) => {
+          const date = transaction.date.split(" ")[1] || "Uncategorized";
+          if (!acumulate[date]) acumulate[date] = 0;
+          acumulate[date] += transaction.balance ? parseFloat(transaction.balance) : 0;
+          return acumulate;
+        }, {});
+
+      const groupExpensesByMonth = reversedTransactions
+        .filter(item => item.type === 'Bill')
+        .reduce((acumulate, transaction) => {
+          const date = transaction.date.split(" ")[1]  || "Uncategorized";
+          if (!acumulate[date]) acumulate[date] = 0;
+          acumulate[date] += transaction.balance ? parseFloat(transaction.balance) : 0;
           return acumulate;
         }, {});
 
@@ -44,8 +62,8 @@ export default function Summary() {
       const TotalExpenses = reversedTransactions
         .filter(item => item.type === 'Bill')
         .reduce((sum, item) => item.balance ? (sum + parseFloat(item.balance)) : 0, 0);
-
-      setData({ TotalIncome, TotalExpenses, groupIncomes, groupExpenses })
+      console.log({ TotalIncome, TotalExpenses,  groupIncomesByCategory,  groupExpensesByCategory,  groupIncomesByMonth,  groupExpensesByMonth})
+      setData({ TotalIncome, TotalExpenses,  groupIncomesByCategory,  groupExpensesByCategory,  groupIncomesByMonth,  groupExpensesByMonth})
       setIsLoading(false);
     });
 
@@ -67,12 +85,12 @@ export default function Summary() {
       {isLoading ? <Text>Loading...</Text> :
         <View>
           <Text style={styles.summaryInfo}>Ingresos</Text>
-          <LineGraphic data={data.groupIncomes} styles={styles} />
-          <PieGraphic data={data.groupIncomes} />
+          <LineGraphic data={data.groupIncomesByMonth} styles={styles} />
+          <PieGraphic data={data.groupIncomesByCategory} />
 
           <Text style={styles.summaryInfo}>Gastos</Text>
-          <LineGraphic data={data.groupExpenses} styles={styles} />
-          <PieGraphic data={data.groupExpenses} />
+          <LineGraphic data={data.groupExpensesByMonth} styles={styles} />
+          <PieGraphic data={data.groupExpensesByCategory} />
           
 
         </View>}
