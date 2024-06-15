@@ -7,50 +7,51 @@ import {
   TouchableOpacity,
   Pressable,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
-import { icons } from "../utils/icons/icons";
 import { editTransaction } from "../utils/firebase/transactions";
-
 
 export default function TransactionInfo({ route, navigation }) {
   const { transaction, index } = route.params;
 
   const [isEditing, setIsEditing] = useState(false);
-
   const [type, setType] = useState(transaction.type);
-  const [balance, setBalance] = useState(transaction.balance);
+  const [balance, setBalance] = useState(transaction.balance.toString());
   const [category, setCategory] = useState(transaction.category);
   const [date, setDate] = useState(transaction.date);
   const [description, setDescription] = useState(transaction.description);
+  const [loading, setLoading] = useState(false);
 
-  const handleSave = async() => {
+  const handleSave = async () => {
+    setLoading(true);
+
+    const updatedTransaction = {
+      ...transaction,
+      type,
+      balance: parseFloat(balance),
+      category,
+      date,
+      description,
+    };
+
     try {
-      await editTransaction(index, { type, balance, category, date, description }); //NO SIRVEEE
-      alert(" Guardado exitosamente");
-      navigation.goBack();
+      await editTransaction(index, updatedTransaction);
+      setIsEditing(false);
+      navigation.goBack(); // Regresar a la página anterior después de guardar
     } catch (error) {
-      alert("Error al editar income: " + error.message);
-      navigation.goBack();
-    } 
-    // Aquí puedes agregar la lógica para guardar los cambios, por ejemplo, actualizar la transacción en la base de datos.
-    console.log("Datos guardados:", { type, balance, category, date, description });
-    
+      console.error("Error al guardar la transacción:", error);
+      // Aquí puedes manejar el error en la interfaz de usuario si es necesario
+    } finally {
+      setLoading(false);
+    }
   };
 
-
-  let lastTap = null;
   const handleDoubleTap = () => {
-    const now = Date.now();
-    if (lastTap && (now - lastTap) < 300) {
-      setIsEditing(true);
-    } else {
-      lastTap = now;
-    }
+    setIsEditing(true);
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {React.cloneElement(icons[category], { size: 100 })}
       <View style={styles.card}>
         <Pressable onPress={handleDoubleTap}>
           <Text style={styles.label}>Tipo:</Text>
@@ -87,7 +88,6 @@ export default function TransactionInfo({ route, navigation }) {
               value={category}
               onChangeText={setCategory}
             />
-            
           ) : (
             <Text style={styles.value}>{category}</Text>
           )}
@@ -120,8 +120,16 @@ export default function TransactionInfo({ route, navigation }) {
         </Pressable>
 
         {isEditing && (
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>Guardar</Text>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleSave}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={styles.saveButtonText}>Guardar</Text>
+            )}
           </TouchableOpacity>
         )}
       </View>

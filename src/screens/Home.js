@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { getTransactions } from "../utils/firebase/transactions";
 import Transaction from "../components/TransactionCard";
-import handleNavigation from "../utils/handleNavigation";
 import TransactionCardSkeleton from "../components/skeletons/TransactionCard-skeleton";
 
 export default function Home({ navigation }) {
@@ -17,25 +16,25 @@ export default function Home({ navigation }) {
 
       // Agrupar transacciones por categoría
       const grouped = reversedTransactions
-      .filter(item => (new Date(item.date) <= new Date()))
-      .reduce((acc, transaction) => {
-        const category = transaction.category || "Uncategorized";
-        if (!acc[category]) {
-          acc[category] = [];
-        }
-        acc[category].push(transaction);
-        return acc;
-      }, {});
+        .filter(item => new Date(item.date) <= new Date())
+        .reduce((acc, transaction) => {
+          const category = transaction.category || "Uncategorized";
+          if (!acc[category]) {
+            acc[category] = [];
+          }
+          acc[category].push(transaction);
+          return acc;
+        }, {});
 
       setGroupedTransactions(grouped);
 
       // Calcular ingresos y gastos usando reversedTransactions
       const newIncome = reversedTransactions
-        .filter(item => (item.type === 'Income' && (new Date(item.date) <= new Date())))
+        .filter(item => item.type === 'Income' && new Date(item.date) <= new Date())
         .reduce((sum, item) => sum + parseFloat(item.balance), 0);
 
       const newExpenses = reversedTransactions
-        .filter(item => item.type === 'Bill' && (new Date(item.date) <= new Date()))
+        .filter(item => item.type === 'Bill' && new Date(item.date) <= new Date())
         .reduce((sum, item) => sum + parseFloat(item.balance), 0);
 
       setIncome(newIncome);
@@ -48,14 +47,15 @@ export default function Home({ navigation }) {
     return () => unsubscribe();
   }, []);
 
-  const renderTransactionItem = ({ item, index }) => {
+  const renderTransactionItem = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("TransactionInfo", { transaction: item, index });
+          navigation.navigate("TransactionInfo", { transaction: item, index: item.index });
+          console.log("El index:", item.index); // Imprime el índice al presionar
         }}
       >
-        {loading ? <TransactionCardSkeleton loading={true}/> : <Transaction transaction={item} />}
+        {loading ? <TransactionCardSkeleton loading={true} /> : <Transaction transaction={item} />}
       </TouchableOpacity>
     );
   };

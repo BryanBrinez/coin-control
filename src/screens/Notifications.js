@@ -48,11 +48,11 @@ export default function Notifications({ navigation }) {
     return () => unsubscribe();
   }, []);
 
-  const renderTransactionItem = ({ item, index }) => {
+  const renderTransactionItem = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("TransactionInfo", { transaction: item, index });
+          navigation.navigate("TransactionInfo", { transaction: item, index: item.index });
         }}
       >
         {loading ? <TransactionCardSkeleton loading={true} /> : <Transaction transaction={item} />}
